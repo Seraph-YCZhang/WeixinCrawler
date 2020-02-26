@@ -1,7 +1,9 @@
 # WeixinCrawler
 
-based on python3
+Depends on python3
 
-use requests and bs4 to get data from weixin.sogou.com
+Use requests and bs4 to get data from weixin.sogou.com  
 
-link with mysql 
+Link with mysql   
+
+Ongoing: Proxies pool with redis, pyquery, aiohttp and flask . 
