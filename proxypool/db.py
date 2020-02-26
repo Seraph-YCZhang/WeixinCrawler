@@ -8,13 +8,13 @@ REDIS_KEY = "proxies"
 
 import redis
 from random import choice
-from proxypool.exceptions import PoolEmptyError
+from exceptions import PoolEmptyError
 
 class RedisClient():
     def __init__(self, host = REDIS_HOST, port = REDIS_PORT, pwd = REDIS_PWD):
         self.db = redis.StrictRedis(host=host,port=port,password=pwd,decode_responses=True)
     
-    def add(self, score, proxy):
+    def add(self, proxy, score = INI_SCORE):
         # if proxy not in db, store it
         if not self.db.zscore(REDIS_KEY, proxy):
             return self.db.zadd(REDIS_KEY, score, proxy)
@@ -56,4 +56,5 @@ class RedisClient():
         # return all elements
         return self.db.zrevrange(REDIS_KEY, MIN_SCORE, MAX_SCORE)    
 
-        
+tmp = RedisClient()
+print(tmp.count())

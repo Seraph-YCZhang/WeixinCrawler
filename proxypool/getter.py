@@ -1,5 +1,5 @@
-from proxypool.db import RedisClient
-from proxypool.crawler import Crawler
+from db import RedisClient
+from crawler import Crawler
 
 POOL_UPPER = 10000
 class Getter():
@@ -8,7 +8,7 @@ class Getter():
         self.crawler = Crawler()
 
     def is_over_threshold(self):
-        if self.redis.count >= POOL_UPPER:
+        if self.redis.count() >= POOL_UPPER:
             return True
         else:
             return False
@@ -19,4 +19,7 @@ class Getter():
             for callback_func in self.crawler.__CrawlFunc__:
                 proxies = self.crawler.get_proxies(callback_func)
                 for proxy in proxies:
-                    self.redis.add(proxy)
+                        self.redis.add(proxy)
+
+tmp = Getter()
+tmp.run()

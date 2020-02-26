@@ -40,6 +40,6 @@ class Crawler(object, metaclass=ProxyMetaclass):
                     td_ip = item.find('td[data-title="IP"]').text()
                     td_port = item.find('td[data-title="PORT"]').text()
                     if td_ip and td_port:
-                        yield Proxy(ip=td_ip, port=td_port)
+                        yield self.Proxy(ip=td_ip, port=td_port)
 
         
