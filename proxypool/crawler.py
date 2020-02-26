@@ -19,6 +19,9 @@ class Crawler(object, metaclass=ProxyMetaclass):
             proxies.append(proxy)
         return proxies
     
+    def Proxy(self, ip, port):
+        return "{}:{}".format(ip,port)
+
     def get_page(self,url):
         response = requests.get(url)
         if response.status_code == 200:
@@ -26,12 +29,17 @@ class Crawler(object, metaclass=ProxyMetaclass):
 
     def crawl_kuaidaili(self):
         page_count = 200
-        start_url = 'https://www.kuaidaili.com/free/inha/{page}/'
+        start_url = 'https://www.kuaidaili.com/free/inha/{}/'
         urls = [start_url.format(page) for page in range(1,page_count+1)]
         for url in urls:
             print("Crawling...")
             html = self.get_page(url)
             if html:
                 doc = pq(html)
+                for item in doc('table tr').items():
+                    td_ip = item.find('td[data-title="IP"]').text()
+                    td_port = item.find('td[data-title="PORT"]').text()
+                    if td_ip and td_port:
+                        yield Proxy(ip=td_ip, port=td_port)
 
         
