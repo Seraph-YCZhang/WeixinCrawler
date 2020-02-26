@@ -8,7 +8,11 @@ REDIS_KEY = "proxies"
 
 import redis
 from random import choice
+<<<<<<< HEAD
 from exceptions import PoolEmptyError
+=======
+from proxypool.exceptions import PoolEmptyError
+>>>>>>> 59e27b94b8e8476bfa759884a062e68b32d99a7a
 
 class RedisClient():
     def __init__(self, host = REDIS_HOST, port = REDIS_PORT, pwd = REDIS_PWD):
