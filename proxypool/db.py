@@ -8,7 +8,7 @@ REDIS_KEY = "proxies"
 
 import redis
 from random import choice
-from Crawler.exceptions import PoolEmptyError
+from proxypool.exceptions import PoolEmptyError
 
 class RedisClient():
     def __init__(self, host = REDIS_HOST, port = REDIS_PORT, pwd = REDIS_PWD):
@@ -44,13 +44,16 @@ class RedisClient():
         return not self.db.zscore(REDIS_KEY,proxy) == None
     
     def max(self, proxy):
+        # set available proxy's score to 100
         print("Proxy ", proxy, " is available, sets score as 100")
         return self.db.zadd(REDIS_KEY, proxy, MAX_SCORE)
     
     def count(self):
+        # return number of elements
         return self.db.zcard(REDIS_KEY)
 
     def all(self):
+        # return all elements
         return self.db.zrevrange(REDIS_KEY, MIN_SCORE, MAX_SCORE)    
 
         
