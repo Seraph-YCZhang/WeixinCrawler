@@ -13,10 +13,10 @@ class Tester():
     
     async def single_test(self, proxy):
         # try connecting with single proxy
-        conn = aiohttp.TCPConnector(verify_sll = False)
+        conn = aiohttp.TCPConnector(ssl = False)
         async with aiohttp.ClientSession(connector=conn) as session:
             try:
-                real_proxy = "https://" + proxy.decode('utf-8')
+                real_proxy = "https://" + proxy.string()
                 print("testing", proxy)
                 async with session.get(TEST_URL,allow_redirects=False,proxy=real_proxy,timeout=15) as response:
                     if response.status in VALID_STATUS_CODE:
@@ -42,6 +42,9 @@ class Tester():
         except Exception as e:
             print(' Error with tester ', e.args)
 
+if __name__ == '__main__':
+    tester = Tester()
+    tester.run()
 
 
                         

@@ -10,6 +10,9 @@ import redis
 from random import choice
 from exceptions import PoolEmptyError
 
+REDIS_CLIENT_VERSION = redis.__version__
+IS_REDIS_VERSION_2 = REDIS_CLIENT_VERSION.startswith('2.')
+
 class RedisClient():
     def __init__(self, host = REDIS_HOST, port = REDIS_PORT, pwd = REDIS_PWD):
         self.db = redis.StrictRedis(host=host,port=port,password=pwd,decode_responses=True)
@@ -17,7 +20,12 @@ class RedisClient():
     def add(self, proxy, score = INI_SCORE):
         # if proxy not in db, store it
         if not self.db.zscore(REDIS_KEY, proxy):
-            return self.db.zadd(REDIS_KEY, score, proxy)
+            if IS_REDIS_VERSION_2:
+                res = self.db.zadd(REDIS_KEY, score, proxy)
+            else:
+                res = self.db.zadd(REDIS_KEY, {proxy:score})
+            # print(res)
+            return res
     
     def random(self):
         # try to get the proxies with MAX_SCORE
@@ -32,10 +40,14 @@ class RedisClient():
             else:
                 raise PoolEmptyError
     
-    def decrese(self, proxy):
-        score = self.db.zscore(REDIS_KEY,proxy)
+    def decrease(self, proxy):
+        # proxy = proxy.string()
+        score = self.db.zscore(REDIS_KEY, proxy)
+        # current score is larger than PROXY_SCORE_MIN
         if score and score > MIN_SCORE:
-            self.db.zincrby(REDIS_KEY, proxy, -1)
+            if IS_REDIS_VERSION_2:
+                return self.db.zincrby(REDIS_KEY, proxy, -1)
+            return self.db.zincrby(REDIS_KEY, -1, proxy)
         else:
             self.db.zrem(REDIS_KEY, proxy)
     

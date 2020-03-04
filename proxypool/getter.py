@@ -1,7 +1,7 @@
 from db import RedisClient
 from crawler import Crawler
 
-POOL_UPPER = 10000
+POOL_UPPER = 1000
 class Getter():
     def __init__(self):
         self.redis = RedisClient()
@@ -21,5 +21,7 @@ class Getter():
                 for proxy in proxies:
                         self.redis.add(proxy)
 
-tmp = Getter()
-tmp.run()
+
+if __name__ == '__main__':
+    getter = Getter()
+    getter.run()

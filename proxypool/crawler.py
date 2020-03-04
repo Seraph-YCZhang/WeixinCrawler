@@ -28,7 +28,7 @@ class Crawler(object, metaclass=ProxyMetaclass):
             return response.text
 
     def crawl_kuaidaili(self):
-        page_count = 200
+        page_count = 10
         start_url = 'https://www.kuaidaili.com/free/inha/{}/'
         urls = [start_url.format(page) for page in range(1,page_count+1)]
         for url in urls:
